@@ -55,5 +55,6 @@ The application will be available at `http://127.0.0.1:5000/` by default.
 4. **Click Update IGV**: Once the locus and BAM path are entered, click the "Update IGV" button. The IGV viewer will refresh and display the BAM file content for the specified locus.
 5. **Visualize Data**: The genomic alignments will be displayed in the IGV viewer. You can zoom in/out, scroll, and interact with the visualization.
 
-
+## LICENSE
+This project is licensed under the MIT License - see the `LICENSE` file for details.
 
