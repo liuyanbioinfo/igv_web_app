@@ -24,7 +24,7 @@ cd igv_web_app
 ### Step 2: Download the reference files
 Download hg19 reference genome and index files.
 
-(Optional) You can change to other refernce versions by editing `fastaURL` and `indexURL` in `/static/index.html`:
+(Optional) You can change to other refernce versions by editing `fastaURL` and `indexURL` in `/templates/index.html`:
 
 ```bash
 cp /path/to/hg19.fa /static/ref/hg19.fa
