@@ -1,5 +1,5 @@
-# IGV Viewer Web Application
-This project provides a web-based interface for visualizing BAM files using IGV.js. Users can view genomic data in an interactive IGV browser, specifying loci of interest for visualization.
+# BAM IGV Web Application
+This project provides a web-based interface for visualizing BAM files using IGV.js. Users can view bam data in an interactive IGV browser, specifying loci of interest for visualization.
 Input bam files should be accessible and valid in the app server. 
 ![web_igv_viewer](app/static/img/web_igv_viewer.png)
 
