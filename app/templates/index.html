@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAM IGV Viewer</title>
+    <script src="https://igv.org/web/release/2.6.6/dist/igv.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.5;
+        }
+
+        .form-container {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-row input {
+            flex: 1;
+            padding: 8px;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+
+        .form-row button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .form-row button:hover {
+            background-color: #0056b3;
+        }
+
+        #igv-div {
+            width: 100%;
+            height: 1200px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>BAM IGV Viewer</h1>
+
+    <div class="form-container">
+        <div class="form-row">
+            <label for="locus">Locus:</label>
+            <input type="text" id="locus" placeholder="e.g., chr7:55241607-55241807">
+        </div>
+        <div class="form-row">
+            <label for="bam_path">BAM Path:</label>
+            <input type="text" id="bam_path" placeholder="Enter the absolute path of your BAM file">
+        </div>
+        <div class="form-row">
+            <button id="update-button">Update IGV</button>
+        </div>
+    </div>
+
+    <div id="igv-div"></div>
+
+    <script>
+        let browser;
+
+        function createBrowser(locus, bamUrl, bamIndexUrl) {
+            // Dispose of the existing browser to avoid rendering conflicts
+            if (browser) {
+                browser.dispose();
+            }
+
+            const igvDiv = document.getElementById("igv-div");
+
+            // Ensure the igvDiv is cleared before creating a new browser instance
+            igvDiv.innerHTML = "";
+
+            // Extract the basename of the BAM file from its URL
+            const bamName = bamUrl.split('/').pop(); 
+
+            const options = {
+                genome: {
+                    id: "hg19",
+                    fastaURL: "/static/ref/hg19.fa",
+                    indexURL: "/static/ref/hg19.fa.fai",
+                },
+                locus: locus,
+                tracks: [
+                    {
+                        name: bamName, // Use the basename of the BAM file
+                        type: "alignment",
+                        format: "bam",
+                        url: bamUrl,
+                        indexURL: bamIndexUrl,
+                        visibilityWindow: -1,
+                        height: 1000 
+                    }
+                ]
+            };
+
+            igv.createBrowser(igvDiv, options).then(newBrowser => {
+                browser = newBrowser;
+                console.log("IGV Browser created");
+            });
+        }
+
+        document.getElementById("update-button").addEventListener("click", function () {
+            const locus = document.getElementById("locus").value.trim();
+            const bamPath = document.getElementById("bam_path").value.trim();
+
+            if (!locus || !bamPath) {
+                alert("Please enter both Locus and BAM Path!");
+                return;
+            }
+
+            fetch("/api/check-bam", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ bam_path: bamPath })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.error || "Unknown error.");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    createBrowser(locus, data.bam_url, data.bam_index_url);
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["poetry-core>=1.6.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "igv_web_app"
+version = "0.1.0"
+description = "A web-based IGV viewer for BAM files."
+authors = ["Your Name <your.email@example.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/liuyanbioinfo/igv_web_app" 
+repository = "https://github.com/liuyanbioinfo/igv_web_app" 
+keywords = ["IGV", "Flask", "BAM Viewer", "Bioinformatics"]
+packages = [
+    { include = "app" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.9" 
+flask = "^3.1"
+pytest = { version = "^8.3.3", optional = true }  # 测试依赖

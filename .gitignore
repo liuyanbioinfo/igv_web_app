@@ -1,0 +1,10 @@
+app/static/ref/hg19*
+app/static/dynamic_bam/*.bam
+app/static/dynamic_bam/*.bam.bai
+*.py[cod]
+
+# 忽略所有 __pycache__ 目录及其内容
+__pycache__/
+
+# build dir
+dist/
