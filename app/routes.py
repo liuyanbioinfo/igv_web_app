@@ -26,15 +26,17 @@ def create_symlink(file_path):
     print("app.root_path", app.root_path)
     SYMLINK_DIR = app.root_path + "/static/dynamic_bam/"
     print("app.root_path", SYMLINK_DIR)
-    # 初始化动态 BAM 文件目录
+    # 初始化动态 BAM 文件目录    
+
     os.makedirs(SYMLINK_DIR, exist_ok=True)
 
     file_name = os.path.basename(file_path)
     symlink_path = os.path.join(SYMLINK_DIR, file_name)
 
-    # 如果软链接不存在，创建它
-    if not os.path.exists(symlink_path):
-        os.symlink(file_path, symlink_path)
+    # 如果软链接已经存在，先删除
+    if os.path.islink(symlink_path) or os.path.exists(symlink_path):
+        os.remove(symlink_path)
+    os.symlink(file_path, symlink_path)
     # flask 应用只能访问app.root_path下路径， 相当于app.root_path为'/'
     return f"/static/dynamic_bam/{file_name}"
 
